@@ -12,7 +12,7 @@ class AuthController {
    * @param {object} req - The request object from Express
    * @param {object} res - The response object from Express
    */
-  static async getConnect(req, res) {
+  static async getConnect (req, res) {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -45,7 +45,7 @@ class AuthController {
    * @param {object} req - The request object from Express
    * @param {object} res - The response object from Express
    */
-  static async getDisconnect(req, res) {
+  static async getDisconnect (req, res) {
     const token = req.headers['x-token'];
 
     const userId = await redisClient.get(`auth_${token}`);

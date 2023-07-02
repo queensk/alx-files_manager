@@ -7,7 +7,7 @@ class AppController {
    * @param {object} req - The request object from Express
    * @param {object} res - The response object from Express
    */
-  static async getStatus(req, res) {
+  static async getStatus (req, res) {
     const redisStatus = await redisClient.isAlive();
     const dbStatus = await dbClient.isAlive();
     res.status(200).json({ redis: redisStatus, db: dbStatus });
@@ -18,7 +18,7 @@ class AppController {
    * @param {object} req - The request object from Express
    * @param {object} res - The response object from Express
    */
-  static async getStats(req, res) {
+  static async getStats (req, res) {
     const nbUsers = await dbClient.nbUsers();
     const nbFiles = await dbClient.nbFiles();
     res.status(200).json({ users: nbUsers, files: nbFiles });

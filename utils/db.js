@@ -8,7 +8,7 @@ class DBClient {
   /**
    * Creates a new MongoDB client instance and connects to the database.
    */
-  constructor() {
+  constructor () {
     // Get the host, port and database from the environment variables or use default values
     const host = process.env.DB_HOST || 'localhost';
     const port = process.env.DB_PORT || 27017;
@@ -19,7 +19,7 @@ class DBClient {
 
     // Create a new client instance
     this.client = new MongoClient(url, {
-      useUnifiedTopology: true,
+      useUnifiedTopology: true
     });
 
     // Connect to the database
@@ -39,7 +39,7 @@ class DBClient {
    * Checks if the connection to MongoDB is alive.
    * @returns {boolean} True if the connection is alive, false otherwise.
    */
-  isAlive() {
+  isAlive () {
     return !!this.client && !!this.client.topology && this.client.topology.isConnected();
   }
 
@@ -48,7 +48,7 @@ class DBClient {
    * @async
    * @returns {Promise<number>} A promise that resolves with the number of users, or rejects with an error.
    */
-  async nbUsers() {
+  async nbUsers () {
     return this.users.countDocuments();
   }
 
@@ -57,7 +57,7 @@ class DBClient {
    * @async
    * @returns {Promise<number>} A promise that resolves with the number of files, or rejects with an error.
    */
-  async nbFiles() {
+  async nbFiles () {
     return this.files.countDocuments();
   }
 }

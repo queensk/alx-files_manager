@@ -9,7 +9,7 @@ class UsersController {
    * @param {object} req - The request object from Express
    * @param {object} res - The response object from Express
    */
-  static async postNew(req, res) {
+  static async postNew (req, res) {
     const { email, password } = req.body;
 
     if (!email) {
@@ -30,13 +30,12 @@ class UsersController {
     res.status(201).json({ id: newUser.insertedId, email });
   }
 
-
   /**
    * Define a static method getMe that retrieves the user based on the token used
    * @param {object} req - The request object from Express
    * @param {object} res - The response object from Express
    */
-  static async getMe(req, res) {
+  static async getMe (req, res) {
     const token = req.headers['x-token'];
 
     const userId = await redisClient.get(`auth_${token}`);
