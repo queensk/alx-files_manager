@@ -7,6 +7,8 @@ import UsersController from '../controllers/UsersController.js';
 
 import AuthController from '../controllers/AuthController.js';
 
+import FilesController from '../controllers/FilesController.js';
+
 const router = Router();
 
 /**
@@ -61,6 +63,31 @@ router.get('/disconnect', (req, res) => {
  */
 router.get('/users/me', (req, res) => {
   UsersController.getMe(req, res);
+});
+
+/**
+ * Define the POST /files endpoint that calls FilesController.postUpload
+ * @param {string} path - The path of the endpoint
+ * @param {function} handler - The handler function for the endpoint
+ */
+router.post('/files', (req, res) => {
+  FilesController.postUpload(req, res);
+});
+
+/**
+ * GET /files/:id
+ * Retrieve the file document based on the ID
+ */
+router.get('/files/:id', (req, res) => {
+  FilesController.getShow(req, res);
+});
+
+/**
+ * GET /files
+ * Retrieve all users file documents for a specific parentId and with pagination
+ */
+router.get('/files', (req, res) => {
+  FilesController.getIndex(req, res);
 });
 
 export default router;
