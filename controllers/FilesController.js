@@ -1,6 +1,6 @@
 import dbClient from '../utils/db.js';
 import redisClient from '../utils/redis.js';
-import {ObjectId} from "mongodb"
+import { ObjectId } from 'mongodb';
 
 import fs from 'fs';
 
@@ -144,6 +144,68 @@ class FilesController {
     ]).toArray();
 
     return res.json(files);
+  }
+
+  /**
+   * Set isPublic to true on the file document based on the ID
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   */
+  static async putPublish (req, res) {
+    // Retrieve the user based on the token
+    const token = req.header('X-Token');
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+    const userId = await redisClient.get(`auth_${token}`);
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+    // Retrieve the file document based on the ID
+    const fileId = req.params.id;
+    const file = await dbClient.files.findOne({ _id: ObjectId(fileId), userId: ObjectId(userId) });
+    if (!file) return res.status(404).json({ error: 'Not found' });
+
+    // Update the value of isPublic to true
+    await dbClient.db.files.updateOne({ _id: ObjectId(fileId), userId: ObjectId(userId) }, { $set: { isPublic: true } });
+
+    // Return the file document with a status code 200
+    return res.status(200).json({
+      id: file._id,
+      userId: file.userId,
+      name: file.name,
+      type: file.type,
+      isPublic: true,
+      parentId: file.parentId
+    });
+  }
+
+  /**
+     * Set isPublic to false on the file document based on the ID
+     * @param {object} req - The request object
+     * @param {object} res - The response object
+     */
+  static async putUnpublish (req, res) {
+    // Retrieve the user based on the token
+    const token = req.header('X-Token');
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+    const userId = await redisClient.get(`auth_${token}`);
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+    // Retrieve the file document based on the ID
+    const fileId = req.params.id;
+    const file = await dbClient.files.findOne({ _id: ObjectId(fileId), userId: ObjectId(userId) });
+    if (!file) return res.status(404).json({ error: 'Not found' });
+
+    // Update the value of isPublic to false
+    await dbClient.files.updateOne({ _id: ObjectId(fileId), userId: ObjectId(userId) }, { $set: { isPublic: false } });
+
+    // Return the file document with a status code 200
+    return res.status(200).json({
+      id: file._id,
+      userId: file.userId,
+      name: file.name,
+      type: file.type,
+      isPublic: false,
+      parentId: file.parentId
+    });
   }
 }
 
